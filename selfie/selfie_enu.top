@@ -17,9 +17,10 @@ concept: (question) ["are you ready?"]
 concept: (jokes) ^rand["how do i look", "do i look cute", "i should get a selfie stick", "i m new to social media but i feel like i m going to be famous"]
 concept: (share) ^rand["don't forget to tag me", "you can share your selfie with me", "follow me and share our picture"]
 
-proposal: %begin ~selfies
-proposal: %get-ready ~ready
+proposal: %begin ~selfies ^nextProposal
+proposal: %get-ready ~ready ^nextProposal
 proposal: %ask-ready ~question
-    u1:(yes) okay, i'm posing for you. say cheese
-proposal: %joke ~jokes
+    u1:(yes) okay, i'm posing for you. say cheese ^nextProposal
+    u1:(no) okay, waiting for you to get ready. /pau=5000/ ^gotoReactivate(ask-ready)
+proposal: %joke ~jokes ^nextProposal
 proposal: %social ~share 
