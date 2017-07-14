@@ -39,7 +39,6 @@ class Selfie(object):
         # Create events and subscribe them here
         self.logger.info("Creating events...")
         # TODO: Create events
-
         self.logger.info("Subscribed to all events.")
 
     @qi.nobind
@@ -72,7 +71,6 @@ class Selfie(object):
             ts = self.session.service("ALTabletService")
             ts.loadApplication(folder)
             ts.showWebview()
-
             self.logger.info("Tablet loaded.")
         except Exception, e:
             self.logger.error("Error starting tablet page{}".format(e))
@@ -101,7 +99,7 @@ class Selfie(object):
             self.logger.info("Dialog loaded!")
         except Exception, e:
             self.logger.info("Error while loading dialog: {}".format(e))
-        dialog.gotoTag("start", "barcode_detected")
+        dialog.gotoTag("begin", "selfie")
 
     @qi.nobind
     def stop_dialog(self):
@@ -127,8 +125,6 @@ class Selfie(object):
         self.logger.info("Starting app...")
         self.show_screen()
         self.start_dialog()
-        self.preferences.update()
-        self.connect_to_preferences()
         self.logger.info("Started!")
 
     @qi.nobind

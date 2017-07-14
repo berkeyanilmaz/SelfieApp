@@ -1,0 +1,52 @@
+body, html {
+    height: 80%;
+    font-family: "Inconsolata", sans-serif;
+}
+
+.fa {
+    padding: 20px;
+    font-size: 30px;
+    width: 30px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  margin-top: 300px;
+  margin-left: 400px;
+  visibility: hidden;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  margin-top: 300px;
+  margin-left: 70px;
+  visibility: hidden;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  margin-top: 300px;
+  margin-left: 70px;
+  visibility: hidden;
+  color: white;
+}
+
+.maximum-logo {
+  visibility: hidden;
+  height: 800px;
+  margin-top: 50px;
+  margin-left: 600px;
+  position: absolute;
+}
+
+
+

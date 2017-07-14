@@ -9,11 +9,14 @@
     </Dialogs>
     <Resources>
         <File name="main" src="main.py" />
-        <File name="font-awesome" src="html/font-awesome.css" />
-        <File name="social-media" src="html/social-media.html" />
+        <File name="maximum" src="html/images/maximum.png" />
+        <File name="main" src="html/main.js" />
+        <File name="qimessaging_helper" src="html/qimessaging_helper.js" />
+        <File name="index" src="html/index.html" />
+        <File name="font-awesome" src="html/css/font-awesome.css" />
     </Resources>
     <Topics>
-        <Topic name="selfie_enu" src="selfie/selfie_enu.top" topicName="selfie" language="en_US" />
+        <Topic name="selfie_enu" src="selfie/selfie_enu.top" topicName="" language="" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="en_US">
