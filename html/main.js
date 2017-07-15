@@ -3,9 +3,7 @@
  */
 
 function showSocialMedia() {
-    $("#facebook1").css("visibility", "visible");
-    $("#instagram1").css("visibility", "visible");
-    $("#twitter1").css("visibility", "visible");
+    $("#socialPanel").css("visibility", "visible");
 }
 
 function showMaximumLogo() {
@@ -17,9 +15,7 @@ function hideMaximumLogo() {
 }
 
 function hideSocialMedia() {
-    $("#facebook1").css("visibility", "hidden");
-    $("#instagram1").css("visibility", "hidden");
-    $("#twitter1").css("visibility", "hidden");
+    $("#socialPanel").css("visibility", "hidden");
 }
 
 
