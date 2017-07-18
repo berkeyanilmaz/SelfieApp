@@ -1,6 +1,16 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font: 71%/1.5 Verdana, Sans-Serif;
     background: #eee;
+    width: 1280px;
+    height: 800px;
+    top: 0px;
+    left: 0px;
+    position: absolute;
 }
 
 .fa {
@@ -19,7 +29,6 @@ body {
 .fa-facebook {
     background: #3B5998;
     color: white;
-    
 }
 
 .fa-twitter {
@@ -34,22 +43,18 @@ body {
     margin-left: 30px;
 }
 
-.maximum-logo {
+#maximum {
     visibility: hidden;
     margin: 0px 0px 0px 0px;
     position: absolute;
+    top: 100px;
+    left: 472px;
 }
 
-#socialPanel
-{
+#socialPanel {
     top: 0px;
     left: 0px;
     align: center;
     margin: 225px 0px 0px 225px;
+    visibility: hidden;
 }
-
-
-
-
-
-
