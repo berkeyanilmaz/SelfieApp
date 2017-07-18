@@ -3,6 +3,7 @@
 import sys
 import qi
 import os
+import socket
 
 
 class Selfie(object):
@@ -20,25 +21,85 @@ class Selfie(object):
         # Do initialization before the service is registered to NAOqi
         self.logger.info("Initializing...")
 
+        # Dialog
+        self.dialog = self.session.service("ALDialog")
+        self.logger.info("Initializing - ALDialog...")
+
         # Autonomous Life
         self.life = self.session.service("ALAutonomousLife")
+        self.logger.info("Initializing - ALAutonomousLife...")
 
         # Memory
         self.memory = self.session.service("ALMemory")
-        self.logger.info("Initializing - ALMemory")
+        self.logger.info("Initializing - ALMemory...")
+
+
+        # Preferences
+        self.preferences = self.session.service("ALPreferenceManager")
+        self.logger.info("Initializing - ALPreferenceManager...")
+        self.preferences.update()
+        self.connect_to_preferences()
 
         # Create Signals
         self.create_signals()
 
         self.logger.info("Initialized!")
 
+    @qi.nobind
+    def connect_to_preferences(self):
+        # connects to cloud preferences library and gets the initial prefs
+        try:
 
+            self.gallery_name = self.preferences.getValue('my_friend', "gallery_name")
+            self.folder_path = self.preferences.getValue('my_friend', "folder_path")
+            self.logger.info(self.folder_path)
+            self.threshold = float(str(self.preferences.getValue('my_friend', "threshold")))
+            self.cm_ip = str(self.preferences.getValue('cm', 'cm_ip'))
+            self.cm_port = int(self.preferences.getValue('cm', 'cm_port'))
+            self.record_folder = self.preferences.getValue('my_friend', "record_folder")
+            self.photo_count = int(self.preferences.getValue('my_friend', "photo_count"))
+            self.resolution = int(self.preferences.getValue('my_friend', "resolution"))
+            self.camera_id = int(self.preferences.getValue('my_friend', "camera_id"))
+            self.picture_format = self.preferences.getValue('my_friend', "picture_format")
+            self.file_name = self.preferences.getValue('my_friend', "file_name")
+        except Exception, e:
+            self.logger.info("failed to get preferences".format(e))
+        self.logger.info("Successfully connected to preferences system")
 
     @qi.nobind
     def create_signals(self):
         # Create events and subscribe them here
         self.logger.info("Creating events...")
         # TODO: Create events
+        event_name = "Selfie/Animation"
+        self.memory.declareEvent(event_name)
+        event_subscriber = self.memory.subscriber(event_name)
+        event_connection = event_subscriber.signal.connect(self.on_start_animation)
+        self.subscriber_list.append([event_subscriber, event_connection])
+        self.logger.info("Subscribed to event: " + event_name)
+
+        event_name = "Selfie/EndAnimation"
+        self.memory.declareEvent(event_name)
+        event_subscriber = self.memory.subscriber(event_name)
+        event_connection = event_subscriber.signal.connect(self.on_end_animation)
+        self.subscriber_list.append([event_subscriber, event_connection])
+        self.logger.info("Subscribed to event: " + event_name)
+
+        event_name = "Selfie/LightsOn"
+        self.memory.declareEvent(event_name)
+        event_subscriber = self.memory.subscriber(event_name)
+        event_connection = event_subscriber.signal.connect(self.on_lights_on)
+        self.subscriber_list.append([event_subscriber, event_connection])
+        self.logger.info("Subscribed to event: " + event_name)
+
+        event_name = "Selfie/LightsOff"
+        self.memory.declareEvent(event_name)
+        event_subscriber = self.memory.subscriber(event_name)
+        event_connection = event_subscriber.signal.connect(self.on_lights_off)
+        self.subscriber_list.append([event_subscriber, event_connection])
+        self.logger.info("Subscribed to event: " + event_name)
+
+
         self.logger.info("Subscribed to all events.")
 
     @qi.nobind
@@ -56,10 +117,85 @@ class Selfie(object):
     # ---------------------------
 
     # Event CallBacks Start
+    @qi.nobind
+    def on_start_animation(self, value):
+        self.logger.info("Event Raised - Selfie/Animation")
+        self.stop_dialog()
+        self.logger.info("Animation Started - Dialog Stopped! ")
+
+
+        self.life.setAutonomousAbilityEnabled("BasicAwareness", False)
+        self.logger.info("Animation Started - BasicAwareness off! ")
+
+    @qi.nobind
+    def on_end_animation(self, value):
+        self.logger.info("Event Raised - Selfie/EndAnimation")
+        self.start_dialog()
+        self.logger.info("Animation Ended - Dialog Started! ")
+        self.dialog.gotoTag("end", "selfie")
+
+        self.life.setAutonomousAbilityEnabled("BasicAwareness", True)
+        self.logger.info("Animation Ended - BasicAwareness on!")
+
+        # self.memory.raiseEvent("$Selfie/LightsOff", 1)
+        # self.logger.info("Event Raised - Selfie/LightsOff")
+
+    @qi.nobind
+    def on_lights_on(self, value):
+        self.logger.info("Event Raised - Selfie/LightsOn")
+        cmd = '{"system":{"set_relay_state":{"state":1}}}'
+        self.run_tcp_command(cmd)
+
+    @qi.nobind
+    def on_lights_off(self, value):
+        self.logger.info("Event Raised - Selfie/LightsOff")
+        cmd = '{"system":{"set_relay_state":{"state":0}}}'
+        self.run_tcp_command(cmd)
 
     # Event CallBacks End
 
-    # -------------------
+    # ---------------------------
+
+    # Smart Plug Connection Starts
+
+    @qi.nobind
+    def run_tcp_command(self, cmd):
+        try:
+            sock_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.logger.info("cm_ip: " + self.cm_ip)
+            sock_tcp.connect((self.cm_ip, self.cm_port))
+            sock_tcp.send(self.encrypt(cmd))
+            data = sock_tcp.recv(2048)
+            sock_tcp.close()
+            self.logger.info(self.decrypt(data[4:]))
+            return True
+        except Exception, e:
+            self.logger.info("Error while sending message to plug: {}".format(e))
+            return False
+
+    @qi.nobind
+    def encrypt(self, string):
+        key = 171
+        result = "\0\0\0\0"
+        for i in string:
+            a = key ^ ord(i)
+            key = a
+            result += chr(a)
+        return result
+
+    @qi.nobind
+    def decrypt(self, string):
+        key = 171
+        result = ""
+        for i in string:
+            a = key ^ ord(i)
+            key = ord(i)
+            result += chr(a)
+        return result
+
+    # Smart Plug Communication Ends
+
+    # -------------------------------------
 
     # Initiation methods for services start
 
@@ -88,27 +224,24 @@ class Selfie(object):
     @qi.nobind
     def start_dialog(self):
         self.logger.info("Loading dialog")
-        dialog = self.session.service("ALDialog")
         dir_path = os.path.dirname(os.path.realpath(__file__))
         topic_path = os.path.realpath(os.path.join(dir_path, "selfie", "selfie_enu.top"))
         self.logger.info("File is: {}".format(topic_path))
         try:
-            self.loaded_topic = dialog.loadTopic(topic_path)
-            dialog.activateTopic(self.loaded_topic)
-            dialog.subscribe(self.service_name)
+            self.loaded_topic = self.dialog.loadTopic(topic_path)
+            self.dialog.activateTopic(self.loaded_topic)
+            self.dialog.subscribe(self.service_name)
             self.logger.info("Dialog loaded!")
         except Exception, e:
             self.logger.info("Error while loading dialog: {}".format(e))
-        dialog.gotoTag("begin", "selfie")
 
     @qi.nobind
     def stop_dialog(self):
         self.logger.info("Unloading dialog")
         try:
-            dialog = self.session.service("ALDialog")
-            dialog.unsubscribe(self.service_name)
-            dialog.deactivateTopic(self.loaded_topic)
-            dialog.unloadTopic(self.loaded_topic)
+            self.dialog.unsubscribe(self.service_name)
+            self.dialog.deactivateTopic(self.loaded_topic)
+            self.dialog.unloadTopic(self.loaded_topic)
             self.logger.info("Dialog unloaded!")
         except Exception, e:
             self.logger.info("Error while unloading dialog: {}".format(e))
@@ -125,6 +258,7 @@ class Selfie(object):
         self.logger.info("Starting app...")
         self.show_screen()
         self.start_dialog()
+        self.dialog.gotoTag("begin", "selfie")
         self.logger.info("Started!")
 
     @qi.nobind

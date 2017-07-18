@@ -19,7 +19,7 @@ function hideSocialMedia() {
 }
 
 
-session.subscribeToEvent("Selfie/Start", function () {
+session.subscribeToEvent("Selfie/HideScreen", function () {
     hideSocialMedia();
     hideMaximumLogo();
 })
@@ -29,7 +29,7 @@ session.subscribeToEvent("Selfie/Animation", function () {
     showMaximumLogo();
 })
 
-session.subscribeToEvent("Selfie/ShowSocial", function () {
+session.subscribeToEvent("Selfie/EndAnimation", function () {
     hideMaximumLogo();
     showSocialMedia();
 })

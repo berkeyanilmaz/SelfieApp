@@ -15,11 +15,11 @@
         <File name="index" src="html/index.html" />
         <File name="font-awesome" src="html/css/font-awesome.css" />
         <File name="pepper" src="html/images/pepper.png" />
-        <File name="swiftswords_ext" src="behavior_1/swiftswords_ext.mp3" />
-        <File name="taichimove" src="behavior_1/taichimove.pmt" />
+        <File name="peppermaximumda" src="peppermaximumda.mp3" />
+        <File name="peppermaximumda" src="peppermaximumda.wav" />
     </Resources>
     <Topics>
-        <Topic name="selfie_enu" src="selfie/selfie_enu.top" topicName="" language="" />
+        <Topic name="selfie_enu" src="selfie/selfie_enu.top" topicName="selfie" language="en_US" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="en_US">

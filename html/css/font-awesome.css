@@ -1,3 +1,8 @@
+body {
+    font: 71%/1.5 Verdana, Sans-Serif;
+    background: #eee;
+}
+
 .fa {
     padding: 60px;
     font-size: 70px;
@@ -13,32 +18,38 @@
 
 .fa-facebook {
     background: #3B5998;
-    float: left;
     color: white;
+    
 }
 
 .fa-twitter {
     background: #55ACEE;
-    float: left;
-    margin-left: 70px;
     color: white;
+    margin-left: 30px;
 }
 
 .fa-instagram {
     background: #125688;
-    float: left;
-    margin-left: 70px;
     color: white;
+    margin-left: 30px;
 }
 
 .maximum-logo {
     visibility: hidden;
-    height: 700px;
-    width: 400px;
-    margin-top: 50px;
-    margin-left: 450px;
+    margin: 0px 0px 0px 0px;
     position: absolute;
 }
+
+#socialPanel
+{
+    top: 0px;
+    left: 0px;
+    align: center;
+    margin: 225px 0px 0px 225px;
+}
+
+
+
 
 
 
