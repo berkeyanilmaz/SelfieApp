@@ -15,8 +15,6 @@
         <File name="index" src="html/index.html" />
         <File name="font-awesome" src="html/css/font-awesome.css" />
         <File name="pepper" src="html/images/pepper.png" />
-        <File name="peppermaximumda" src="peppermaximumda.mp3" />
-        <File name="peppermaximumda" src="peppermaximumda.wav" />
     </Resources>
     <Topics>
         <Topic name="selfie_enu" src="selfie/selfie_enu.top" topicName="selfie" language="en_US" />

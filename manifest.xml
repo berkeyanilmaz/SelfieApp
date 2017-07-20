@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="selfieapp-1089c9" version="0.0.0">
+<package version="0.0.0" uuid="selfieapp-1089c9">
  <names>
-  <name lang="en_US">Untitled</name>
+  <name lang="en_US">Selfie</name>
  </names>
  <supportedLanguages>
   <language>en_US</language>
@@ -17,7 +17,7 @@
   </behaviorContent>
  </contents>
  <services>
-  <service name="Selfie" autorun="false" execStart="main.py"/>
+  <service autorun="false" name="Selfie" execStart="main.py"/>
  </services>
  <executableFiles>
   <file path="main.py"/>
